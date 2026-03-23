@@ -1,0 +1,19 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {
+      "shallowClone": true
+    },
+    "ghcr.io/devcontainers/features/terraform:latest": {},
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    }
+  },
+  "onCreateCommand": "brew install awscli vim",
+  "containerEnv": {
+    "HOMEBREW_NO_AUTO_UPDATE": "1"
+  },
+  "hostRequirements": {
+    "memory": "16gb"
+  }
+}
