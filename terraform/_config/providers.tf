@@ -14,3 +14,9 @@ provider "aws" {
     role_arn = "arn:aws:iam::838650235286:role/fullaccess"
   }
 }
+
+provider "github" {
+  owner = "cloud-nova-crop"
+
+  token = aws_secretsmanager_secret_version.terraform_github_access_token.secret_string
+}
