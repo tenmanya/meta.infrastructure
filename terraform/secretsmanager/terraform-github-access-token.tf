@@ -11,3 +11,7 @@ EOS
 
   tags = local.tags
 }
+
+ephemeral "aws_secretsmanager_secret_version" "terraform_github_access_token" {
+  secret_id = aws_secretsmanager_secret.terraform_github_access_token.id
+}
