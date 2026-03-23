@@ -33,15 +33,6 @@ List of all tags whose images will not be deleted by the lifecycle policy.
 EOS
 }
 
-variable "lambda_account_ids" {
-  type    = list(string)
-  default = []
-
-  description = <<EOS
-List of AWS account IDs which access this ECR repository via Lambda functions.
-EOS
-}
-
 variable "name" {
   type = string
 

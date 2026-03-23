@@ -1,10 +1,12 @@
 locals {
+  ecs_root_user_arns = [for id in var.ecs_account_ids : "arn:aws:iam::${id}:root"]
+
   rules = concat(
     [
       for keep_image_tag in var.keep_image_tags :
 
       {
-        description = "Keep image tagged with ${keep_image_tag}."
+        description = "Keep image tagged ${keep_image_tag}."
 
         selection = {
           tagStatus = "tagged"
@@ -21,32 +23,13 @@ locals {
     ],
     [
       {
-        description = "Keep 9000 tagged images that are not tagged with an environment."
-
-        selection = {
-          tagStatus = "tagged"
-
-          # If you specify multiple tags, images with just one matching tag are selected.
-          # https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html#lp_tag_prefix_list
-          tagPrefixList = ["sha-"]
-          countType     = "imageCountMoreThan"
-          countNumber   = 9000
-        }
-
-        action = {
-          type = "expire"
-        }
-      },
-    ],
-    [
-      {
-        description = "Expire untagged images older than 1 day."
+        description = "Expire untagged images older than 90 day."
 
         selection = {
           tagStatus   = "untagged"
           countType   = "sinceImagePushed"
           countUnit   = "days"
-          countNumber = 1
+          countNumber = 180
         }
 
         action = {
@@ -69,15 +52,6 @@ locals {
     ]
   }
 
-  ecs_root_user_arns = [for id in var.ecs_account_ids : "arn:aws:iam::${id}:root"]
-
-  lambda_arns = [for id in var.lambda_account_ids : "arn:aws:lambda:${data.aws_region.current.region}:${id}:function:*"]
-
-  cross_account_lambda_account_root_ids = [
-    for id in setsubtract(var.lambda_account_ids, [data.aws_caller_identity.current.account_id]) :
-    "arn:aws:iam::${id}:root"
-  ]
-
   ecr_repository_policy_statements = [
     length(var.ecs_account_ids) > 0 ? {
       actions = [
@@ -94,33 +68,6 @@ locals {
       principals = [{
         type        = "AWS"
         identifiers = local.ecs_root_user_arns
-      }]
-    } : null,
-    length(var.lambda_account_ids) > 0 ? {
-      actions = [
-        "ecr:BatchGetImage",
-        "ecr:GetDownloadUrlForLayer"
-      ]
-      principals = [{
-        type        = "Service"
-        identifiers = ["lambda.amazonaws.com"]
-      }]
-      conditions = [{
-        test     = "StringLike"
-        variable = "aws:sourceArn"
-        values   = local.lambda_arns
-      }]
-    } : null,
-    length(local.cross_account_lambda_account_root_ids) > 0 ?
-    {
-      # https://repost.aws/knowledge-center/lambda-ecr-image
-      actions = [
-        "ecr:BatchGetImage",
-        "ecr:GetDownloadUrlForLayer"
-      ]
-      principals = [{
-        type        = "AWS"
-        identifiers = local.cross_account_lambda_account_root_ids
       }]
     } : null,
   ]
@@ -204,11 +151,6 @@ data "aws_iam_policy_document" "ecr-repository-push" {
     ]
   }
 
-  # We need read permissions in GitHub Actions in order to be able to:
-  #
-  # 1. Check whenever an image with a given Commit SHA was already uploaded
-  # 2. Possiblility to make use of caching [to be verified]
-  #
   statement {
     actions = [
       "ecr:BatchGetImage",
