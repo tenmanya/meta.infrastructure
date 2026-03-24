@@ -16,6 +16,10 @@ resource "github_repository" "bananas-rails" {
   vulnerability_alerts = false
 }
 
+output "github-repository-bananas-rails" {
+  value = github_repository.bananas-rails
+}
+
 resource "github_branch" "bananas-rails-main" {
   repository = github_repository.bananas-rails.name
   branch     = "main"
