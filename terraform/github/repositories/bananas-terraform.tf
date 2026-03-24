@@ -26,7 +26,15 @@ resource "github_branch_default" "bananas-terraform-default" {
   branch     = github_branch.bananas-terraform-main.branch
 }
 
-  # TODO - protection
+# when public
+# resource "github_branch_protection" "bananas-terraform-default" {
+#   repository_id = github_repository.bananas-terraform.name
+# 
+#  pattern          = "main"
+#  enforce_admins   = false
+#  allows_deletions = true
+# }
+
 
 ## repository environment production for Terraform
 resource "github_repository_environment" "bananas-terraform-production" {
