@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "oidc-provider-github-assume-role-with-web-idenit
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:cloud-nova-crop/*"]
+      values   = ["repo:cloud-nova-corp/*"]
     }
   }
 }
