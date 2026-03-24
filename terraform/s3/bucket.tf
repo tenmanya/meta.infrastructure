@@ -33,6 +33,33 @@ resource "aws_s3_bucket_public_access_block" "cloud-nova-corp-terraform" {
   restrict_public_buckets = true
 }
 
+
+resource "aws_s3_bucket_policy" "cloud-nova-corp-terraform" {
+  bucket = aws_s3_bucket.cloud-nova-corp-terraform.bucket
+
+  policy = data.aws_iam_policy_document.s3-cloud-nova-corp-terraform-cross-account-user-access.json
+}
+
+# allow terraform user to read remote state state files
+data "aws_iam_policy_document" "s3-cloud-nova-corp-terraform-cross-account-user-access" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::205899621967:user/cloud-nova-corp-terraform"]
+    }
+
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.cloud-nova-corp-terraform.bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.cloud-nova-corp-terraform.bucket}/*"
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "s3-bucket-cloud-nova-corp-terraform-fullaccess" {
   statement {
     actions   = ["s3:List*", "s3:Get*"]
