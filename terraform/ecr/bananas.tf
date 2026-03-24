@@ -5,6 +5,8 @@ module "ecr-repository-bananas" {
 
   keep_image_tags = ["production", "staging"]
 
+  ecs_account_ids = ["205899621967"]
+
   default_tags = {
     app = "bananas"
   }
