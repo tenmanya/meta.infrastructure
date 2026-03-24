@@ -1,3 +1,6 @@
+# for issues pulling tasks cross accocunt cf.
+# https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html
+
 locals {
   ecs_root_user_arns = [for id in var.ecs_account_ids : "arn:aws:iam::${id}:root"]
 
