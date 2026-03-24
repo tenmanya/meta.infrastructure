@@ -44,19 +44,26 @@ resource "aws_s3_bucket_policy" "cloud-nova-corp-terraform" {
 data "aws_iam_policy_document" "s3-cloud-nova-corp-terraform-cross-account-user-access" {
   statement {
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::205899621967:user/cloud-nova-corp-terraform"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::205899621967:root" # access from production account
+      ]
     }
 
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket"
-    ]
-
+    actions = ["s3:*"]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.cloud-nova-corp-terraform.bucket}",
       "arn:aws:s3:::${aws_s3_bucket.cloud-nova-corp-terraform.bucket}/*"
     ]
+  }
+  statement {
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::205899621967:root", # access from production account
+      ]
+    }
+    actions   = ["s3:List*", "s3:Get*"]
+    resources = [aws_s3_bucket.cloud-nova-corp-terraform.arn]
   }
 }
 
@@ -65,7 +72,6 @@ data "aws_iam_policy_document" "s3-bucket-cloud-nova-corp-terraform-fullaccess" 
     actions   = ["s3:List*", "s3:Get*"]
     resources = [aws_s3_bucket.cloud-nova-corp-terraform.arn]
   }
-
   statement {
     actions   = ["s3:*"]
     resources = ["${aws_s3_bucket.cloud-nova-corp-terraform.arn}/*"]

@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "cross-account-assume-role-production-fullaccess"
       type = "AWS"
 
       identifiers = [
-	"arn:aws:iam::205899621967:user/cloud-nova-corp-terraform" # apply user
+        "arn:aws:iam::205899621967:user/cloud-nova-corp-terraform" # apply user
       ]
     }
   }

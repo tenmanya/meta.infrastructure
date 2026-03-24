@@ -1,6 +1,6 @@
 locals {
   tags = {
-    org = "cloud-nova"
+    org        = "cloud-nova"
     enviroment = "meta"
   }
 }
