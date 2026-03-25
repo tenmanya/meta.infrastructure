@@ -8,7 +8,7 @@ resource "github_repository" "meta-infrastructure" {
   description = "Infrastructure not specific to enviroments, shared accross reositories (most GitHub resources)"
   topics      = ["terraform"]
 
-  visibility = "private"
+  visibility = "public"
 
   has_issues   = false
   has_projects = false
