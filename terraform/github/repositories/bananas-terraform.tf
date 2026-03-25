@@ -3,7 +3,7 @@ resource "github_repository" "bananas-terraform" {
   description = "Bananas Terraform setup. This environment specific but currently only production."
   topics      = ["examples", "terraform"]
 
-  visibility = "private"
+  visibility = "public"
 
   has_issues   = false
   has_projects = false
