@@ -5,7 +5,9 @@ Foundational AWS and GitHub infrastructure shared across the `cloud-nova-crop` o
 ## Purpose
 
 This repository manages resources that are outside of a specific `staging` or `production` environment.
-It manages GitHub repositories, and S3 bucket where all repos store Terraform related data, an ECR repository.
+This demonstrates an AWS cross account setup e.g. for ECR repository and S3 bucket providing resources to other accounts.
+
+The repository contains IsC for GitHub resources, S3 bucket (where all reposistories store Terraform related data), and ECR repository.
 Other repositories manage the `production` and more environments could be added, but the aforementioned resources
 are shared by all environments current and future.
 
