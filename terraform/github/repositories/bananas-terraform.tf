@@ -3,7 +3,7 @@ resource "github_repository" "bananas-terraform" {
   description = "Bananas Terraform setup. This environment specific but currently only production."
   topics      = ["examples", "terraform"]
 
-  visibility = "private"
+  visibility = "public"
 
   has_issues   = false
   has_projects = false
@@ -26,14 +26,13 @@ resource "github_branch_default" "bananas-terraform-default" {
   branch     = github_branch.bananas-terraform-main.branch
 }
 
-# when public
-# resource "github_branch_protection" "bananas-terraform-default" {
-#   repository_id = github_repository.bananas-terraform.name
-# 
-#  pattern          = "main"
-#  enforce_admins   = false
-#  allows_deletions = true
-# }
+resource "github_branch_protection" "bananas-terraform-default" {
+  repository_id = github_repository.bananas-terraform.name
+
+  pattern          = "main"
+  enforce_admins   = false
+  allows_deletions = true
+}
 
 
 ## repository environment production for Terraform
